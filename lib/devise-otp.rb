@@ -77,9 +77,12 @@ module Devise
   end
 end
 
-Devise.add_module :otp_authenticatable,
-  controller: :tokens,
-  model: "devise_otp_authenticatable/models/otp_authenticatable", route: :otp
+Devise.register_two_factor_method(
+  :otp,
+  model: "devise/models/otp_authenticatable",
+  strategy: :otp_two_factor_authenticatable,
+  route: { otp: [] }
+)
 
 #
 # add PublicHelpers after adding Devise module to ensure that per-mapping routes from above are included

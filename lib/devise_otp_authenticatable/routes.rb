@@ -17,7 +17,7 @@ module ActionDispatch::Routing
           end
         end
 
-        resource :credential, only: [:show, :update],
+        resource :credential, only: [],
           path: mapping.path_names[:credentials], controller: controllers[:otp_credentials] do
           get :refresh, action: "get_refresh"
           put :refresh, action: "set_refresh"

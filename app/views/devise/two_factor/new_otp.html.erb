@@ -1,0 +1,29 @@
+<% recovery = params[:recovery] == "true" %>
+
+<h2><%= t("title", scope: "devise.otp.submit_token") %></h2>
+<p><%= t("explain", scope: "devise.otp.submit_token") %></p>
+
+<%= form_with url: two_factor_path(resource_name), method: :post, local: true do |f| %>
+  <%= hidden_field_tag :recovery, recovery %>
+
+  <% if recovery %>
+    <p>
+      <%= label_tag :token, t("recovery_prompt", scope: "devise.otp.submit_token") %><br>
+      <%= text_field_tag :otp_recovery_counter, @authenticating_resource.otp_recovery_counter, autocomplete: :off, disabled: true, size: 4 %>
+    </p>
+  <% else %>
+    <p>
+      <%= label_tag :token, t("prompt", scope: "devise.otp.submit_token") %><br>
+    </p>
+  <% end %>
+
+  <%= text_field_tag :token, nil, autocomplete: :off, autofocus: true, size: 6 %><br>
+
+  <p><%= f.submit t("submit", scope: "devise.otp.submit_token") %></p>
+<% end %>
+
+<% if !recovery && recovery_enabled? %>
+  <p><%= link_to t("recovery_link", scope: "devise.otp.submit_token"), new_two_factor_challenge_path(resource_name, :otp, recovery: true) %></p>
+
+  <%= two_factor_method_links(@authenticating_resource, :otp) %>
+<% end %>

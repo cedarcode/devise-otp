@@ -1,8 +1,10 @@
 require "rotp"
+require "devise/strategies/otp_two_factor_authenticatable"
 
 module Devise::Models
   module OtpAuthenticatable
     extend ActiveSupport::Concern
+    include Devise::Models::TwoFactorAuthenticatable
 
     included do
       scope :with_valid_otp_challenge, lambda { |time| where("otp_challenge_expires > ?", time) }
@@ -16,6 +18,10 @@ module Devise::Models
       def find_valid_otp_challenge(challenge)
         with_valid_otp_challenge(Time.now).where(otp_session_challenge: challenge).first
       end
+    end
+
+    def otp_two_factor_enabled?
+      otp_enabled?
     end
 
     def time_based_otp
